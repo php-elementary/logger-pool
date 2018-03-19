@@ -2,12 +2,13 @@
 
 namespace elementary\logger\pool;
 
+use elementary\core\Singleton\SingletonInterface;
 use elementary\core\Singleton\SingletonTrait;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class LoggerPool extends AbstractLogger
+class LoggerPool extends AbstractLogger implements SingletonInterface
 {
     use SingletonTrait;
 
@@ -53,7 +54,8 @@ class LoggerPool extends AbstractLogger
      */
     public function log($level, $message, array $context = array())
     {
-        foreach ($this->loggers as $object) {
+        $loggers = $this->loggers;
+        foreach ($loggers as $object) {
             if ($this->checkLevel($level, $object['level'])) {
                 /** @var LoggerInterface $logger */
                 $logger = $object['logger'];
@@ -63,14 +65,22 @@ class LoggerPool extends AbstractLogger
     }
 
     /**
-     * @param string $levelSource
-     * @param string $levelTarget
+     * @return array
+     */
+    public function getLoggers()
+    {
+        return $this->loggers;
+    }
+
+    /**
+     * @param string $messageLevel
+     * @param string $loggerLevel
      *
      * @return bool
      */
-    public function checkLevel($levelSource, $levelTarget)
+    public function checkLevel($messageLevel, $loggerLevel)
     {
-        return $this->levelMap[$levelSource] >= $this->levelMap[$levelTarget];
+        return $this->levelMap[$messageLevel] >= $this->levelMap[$loggerLevel];
     }
 
 }
