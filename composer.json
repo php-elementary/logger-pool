@@ -1,6 +1,6 @@
 {
     "name":         "elementary/logger-pool",
-    "description":  "Extend \\Psr\\Log\\LoggerAwareTrait",
+    "description":  "The pool of different loggers wich impliments \\PSR\\Log\\LoggerInterface",
     "license":      "MIT",
     "authors": [
         {
